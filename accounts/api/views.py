@@ -73,15 +73,40 @@ class ConfirmEmailAPIView(generics.GenericAPIView):
 
 
 class CustomizeBirdAPIView(generics.GenericAPIView):
-
+    
     def post(self, request, *args, **kwargs):
-        user = request.user
-        user.bird_color = request.data['color']
+        user = request.user     
+        '''if(user.bird_color == ''):
+            return Response("Your bird color does not exist")
+        '''
+        user.bird_color = request.data['color'] 
         user.save()
+        if (user.address==''):
+            addr = ''
+        else:
+            addr = user.number + ' ' + user.address + ', ' + user.state 
+
         return Response({
-            "user": user.username,
-            "color": user.bird_color
+            "color": user.bird_color,
+            "address": addr
         })
+
+    def get(self, request, token):
+        user = ExtendedUser()
+        try:
+            user = ExtendedUser.objects.get(username=token)
+        except:
+            user = request.user
+        print(user.bird_color)
+        if (user.address==''):
+            addr = ''
+        else:
+            addr = user.number + ' ' + user.address + ', ' + user.state 
+            
+        return Response({
+            "color":user.bird_color,
+            "address": addr})
+
 
 
 class CustomizeAddressGeneratorAPIView(generics.GenericAPIView):
