@@ -232,7 +232,7 @@ class EditMessageAPIView(generics.GenericAPIView):
             recipient_user = ExtendedUser.objects.get(username=request.data['recipient'])
             if recipient_user.is_active == False:
                 return Response({'username': "Sorry, This recipient hasn't confirmed their account yet!"})
-            modified_data['recipient'] = recipient_user.id
+            message.recipient = recipient_user
         except:
             return Response({"username": "Sorry! We cannot find any account associated with this username!"}) 
 
